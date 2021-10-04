@@ -1,4 +1,5 @@
 # Kubernets (K8)
+![image](https://www.net4all.ch/wp-content/uploads/sites/3/2020/12/09/kubernetes-net4all.png)
 - developed by google
 - container-orchestration tool
 - Manages containers (Docker containers)
