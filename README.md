@@ -159,7 +159,7 @@ spec:
          - containerPort: 27017
 
 ```
-`kubectl create -f DB-Deploy.yml`\
+`kubectl create -f DB-Deploy.yml`
 
 ### DB-service.yml
 This allows the service to forward data to this container as well as maintain its ip if it does down.
@@ -177,8 +177,9 @@ spec:
     targetPort: 27017
   type: LoadBalancer 
  ```
-`kubectl create -f  DB-service.yml`
-
+`kubectl create -f  DB-service.yml` \
+This will seed the databse allowing the data to be accessed 
+` kubectl exec [pod-name]  env node seeds/seed.js`
 ###
 Type:
 ` kubectl get all `
