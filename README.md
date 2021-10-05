@@ -87,6 +87,8 @@ spec:
             value: mongodb://mongo:27017/posts
 
 ```
+`kubectl create -f node_deployment.yml`
+
 
 ### Node Service
 
@@ -104,9 +106,9 @@ spec:
      targetPort: 3000
   type: LoadBalancer
 ```
+`kubectl create -f nginx_svc.yml`
 
-
-### node_hap.yml
+### node_hpa.yml
 This is the nodes horazontal scaling add-on
 
 ```
@@ -126,6 +128,7 @@ spec:
     name: node 
   targetCPUUtilizationPercentage: 50
 ```
+`kubectl create -f node_hpa.yml`
 
 
 ### DB-Deploy.yml
@@ -156,6 +159,8 @@ spec:
          - containerPort: 27017
 
 ```
+`kubectl create -f DB-Deploy.yml`\
+
 ### DB-service.yml
 This allows the service to forward data to this container as well as maintain its ip if it does down.
 
@@ -172,6 +177,56 @@ spec:
     targetPort: 27017
   type: LoadBalancer 
  ```
+`kubectl create -f  DB-service.yml`
+
+###
+Type:
+` kubectl get all `
+
+At the end it should look like this:
+
+```
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/mongo-697477455c-lsvdg   1/1     Running   0   
+       7h2m
+pod/mongo-697477455c-mssvf   1/1     Running   0   
+       7h2m
+pod/node-d5c8478b4-hp6ml     1/1     Running   0   
+       6h37m
+pod/node-d5c8478b4-hww6x     1/1     Running   0   
+       6h37m
+pod/node-d5c8478b4-s9z48     1/1     Running   0   
+       6h37m
+
+NAME                 TYPE           CLUSTER-IP     
+  EXTERNAL-IP   PORT(S)           AGE
+service/kubernetes   ClusterIP      10.96.0.1      
+  <none>        443/TCP           33h
+service/mongo        LoadBalancer   10.104.231.183 
+  localhost     27017:30770/TCP   7h2m
+service/node         LoadBalancer   10.110.195.225 
+  localhost     3000:30260/TCP    7h54m
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mongo   2/2     2            2     
+      7h2m
+deployment.apps/node    3/3     3            3     
+      6h37m
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/mongo-697477455c   2         2     
+    2       7h2m
+replicaset.apps/node-d5c8478b4     3         3     
+    3       6h37m
+
+NAME
+          REFERENCE         TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/sparta-node-app-deploy   Deployment/node   <unknown>/50%   3      
+   9         3          8h
+
+
+```
 
 
 
