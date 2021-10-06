@@ -276,20 +276,28 @@ To see all of the configurations use this. \
 ` kubectl get all `
 
 At the end it should look like this:
-
+- mongo 
 ```
 NAME                         READY   STATUS    RESTARTS   AGE
 pod/mongo-54d9fb44b7-8sdwr   1/1     Running   0          49m
 pod/mongo-54d9fb44b7-zskvv   1/1     Running   0          49m
+```
+- node
+```
+NAME                         READY   STATUS    RESTARTS   AGE
 pod/node-869c6747bb-52s8q    1/1     Running   2          49m
 pod/node-869c6747bb-g9lcf    1/1     Running   2          49m
 pod/node-869c6747bb-mcs9z    1/1     Running   1          49m
-
+```
+- services 
+```
 NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
 service/kubernetes   ClusterIP      10.96.0.1        <none>        443/TCP           44h
 service/mongo        LoadBalancer   10.104.231.183   localhost     27017:30770/TCP   18h
 service/node         LoadBalancer   10.110.195.225   localhost     3000:30260/TCP    19h
-
+```
+Deployments
+```
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/mongo   2/2     2            2           18h
 deployment.apps/node    3/3     3            3           18h
