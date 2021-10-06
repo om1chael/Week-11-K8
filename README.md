@@ -108,11 +108,6 @@ node-869c6747bb-g9lcf    1/1     Running   1          23m
 node-869c6747bb-mcs9z    1/1     Running   1          23m
 ```
 
-
-
-
-
-
 ### Node Service:
 
 ```
@@ -283,46 +278,30 @@ To see all of the configurations use this. \
 At the end it should look like this:
 
 ```
-
 NAME                         READY   STATUS    RESTARTS   AGE
-pod/mongo-697477455c-lsvdg   1/1     Running   0   
-       7h2m
-pod/mongo-697477455c-mssvf   1/1     Running   0   
-       7h2m
-pod/node-d5c8478b4-hp6ml     1/1     Running   0   
-       6h37m
-pod/node-d5c8478b4-hww6x     1/1     Running   0   
-       6h37m
-pod/node-d5c8478b4-s9z48     1/1     Running   0   
-       6h37m
+pod/mongo-54d9fb44b7-8sdwr   1/1     Running   0          49m
+pod/mongo-54d9fb44b7-zskvv   1/1     Running   0          49m
+pod/node-869c6747bb-52s8q    1/1     Running   2          49m
+pod/node-869c6747bb-g9lcf    1/1     Running   2          49m
+pod/node-869c6747bb-mcs9z    1/1     Running   1          49m
 
-NAME                 TYPE           CLUSTER-IP     
-  EXTERNAL-IP   PORT(S)           AGE
-service/kubernetes   ClusterIP      10.96.0.1      
-  <none>        443/TCP           33h
-service/mongo        LoadBalancer   10.104.231.183 
-  localhost     27017:30770/TCP   7h2m
-service/node         LoadBalancer   10.110.195.225 
-  localhost     3000:30260/TCP    7h54m
+NAME                 TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE
+service/kubernetes   ClusterIP      10.96.0.1        <none>        443/TCP           44h
+service/mongo        LoadBalancer   10.104.231.183   localhost     27017:30770/TCP   18h
+service/node         LoadBalancer   10.110.195.225   localhost     3000:30260/TCP    19h
 
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/mongo   2/2     2            2     
-      7h2m
-deployment.apps/node    3/3     3            3     
-      6h37m
+deployment.apps/mongo   2/2     2            2           18h
+deployment.apps/node    3/3     3            3           18h
 
 NAME                               DESIRED   CURRENT   READY   AGE
-replicaset.apps/mongo-697477455c   2         2     
-    2       7h2m
-replicaset.apps/node-d5c8478b4     3         3     
-    3       6h37m
+replicaset.apps/mongo-54d9fb44b7   2         2         2       49m
+replicaset.apps/mongo-697477455c   0         0         0       18h
+replicaset.apps/node-869c6747bb    3         3         3       49m
+replicaset.apps/node-d5c8478b4     0         0         0       18h
 
-NAME
-          REFERENCE         TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
-horizontalpodautoscaler.autoscaling/sparta-node-app-deploy   Deployment/node   <unknown>/50%   3      
-   9         3          8h
-
-
+NAME                                                         REFERENCE         TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/sparta-node-app-deploy   Deployment/node   <unknown>/50%   3         9         3          20h
 ```
 
 
