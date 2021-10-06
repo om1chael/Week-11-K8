@@ -49,17 +49,28 @@ Error from server (InternalError): an error on the server ("") has prevented the
 
 ____
 ### Adding the Database:
-- Files:
--   Node-App:
+Files: 
+- Node-App:
+```
         - node_deployment.yml
         - node_svc.yml
         - node_hap.yml
+```
 -   DB-app:
+```
         - DB-Deploy.yml
         - DB-services.yml
+```
+- persistent volume
+
+```
+        - pv.yml
+        - pvc.yml
+```
+
 ____
-### Adding the Node app
-This creates the node app using the docker images previouly created:
+### Adding the Node app :
+- This creates the node app using the docker images previouly created:
 
 ```
 # Create a diagram for node deployment and services 
@@ -87,10 +98,22 @@ spec:
             value: mongodb://mongo:27017/posts
 
 ```
-`kubectl create -f node_deployment.yml`
+`kubectl create -f node_deployment.yml`\
+It will create 3 pods with the Node app instances: To show the running pods: \
+`kubectl get  pods`
+```
+NAME                     READY   STATUS    RESTARTS   AGE
+node-869c6747bb-52s8q    1/1     Running   1          23m
+node-869c6747bb-g9lcf    1/1     Running   1          23m
+node-869c6747bb-mcs9z    1/1     Running   1          23m
+```
 
 
-### Node Service
+
+
+
+
+### Node Service:
 
 ```
 ---
@@ -109,7 +132,7 @@ spec:
 `kubectl create -f nginx_svc.yml`
 
 ### node_hpa.yml
-This is the nodes horazontal scaling add-on
+- This is the nodes horazontal scaling add-on
 
 ```
 apiVersion: autoscaling/v1
@@ -132,7 +155,7 @@ spec:
 
 
 ### DB-Deploy.yml
-Creates the DB vm using the mongo image from dockerhub. This DB is configured on port 27017
+- Creates the DB vm using the mongo image from dockerhub. This DB is configured on port 27017
 
 ```
 ---
@@ -158,11 +181,20 @@ spec:
         ports: 
          - containerPort: 27017
 
+        volumeMounts:
+          - mountPath: /data/db
+            name: storage
+      
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mypvc
+
 ```
 `kubectl create -f DB-Deploy.yml`
 
 ### DB-service.yml
-This allows the service to forward data to this container as well as maintain its ip if it does down.
+- This allows the service to forward data to this container as well as maintain its ip if it does down.
 
 ```
 apiVersion: v1
@@ -178,10 +210,74 @@ spec:
   type: LoadBalancer 
  ```
 `kubectl create -f  DB-service.yml` \
-This will seed the databse allowing the data to be accessed 
+This will seed the databse allowing the data to be accessed \
 ` kubectl exec [pod-name]  env node seeds/seed.js`
-###
-Type:
+___
+## persistent volume kubernetes 
+file:
+  - pv.yml 
+  - pvc.yml
+
+![images](https://www.infinidat.com/sites/default/files/uploads/images/Matching_PV.png)
+
+- pv.yml
+This is the presistent volume that get created with a storage volume. When the PVC (claim) is created, it links to the pod that has the correct ammount of memory. 
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mypv
+spec:
+  capacity:
+    storage: 256Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  hostPath:
+    path: /data/db
+    type: Directory
+```
+
+
+- pvc.yml 
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+spec:
+  resources:
+    requests:
+      storage: 256Mi
+  accessModes:
+    - ReadWriteOnce
+```
+To see if the results: \
+`kubectl get  pv`
+
+```
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM           STORAGECLASS   REASON   AGE
+mypv                                       256Mi      RWO            Recycle          Available                   slow                    56m
+pvc-498faca5-965e-4886-bc6c-55066eb6cf2f   256Mi      RWO            Delete           Bound       default/mypvc   hostpath                55m
+
+```
+To see the PVC for the presistent volume claim \
+`kubectl get  pvc`
+
+```
+NAME    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mypvc   Bound    pvc-498faca5-965e-4886-bc6c-55066eb6cf2f   256Mi      RWO            hostpath       55m
+```
+
+___
+
+To see all of the configurations use this. \
 ` kubectl get all `
 
 At the end it should look like this:
