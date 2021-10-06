@@ -296,7 +296,7 @@ service/kubernetes   ClusterIP      10.96.0.1        <none>        443/TCP      
 service/mongo        LoadBalancer   10.104.231.183   localhost     27017:30770/TCP   18h
 service/node         LoadBalancer   10.110.195.225   localhost     3000:30260/TCP    19h
 ```
-Deployments
+- Deployments
 ```
 NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/mongo   2/2     2            2           18h
